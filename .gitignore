@@ -1,0 +1,24 @@
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Maven
+target/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDEs
+.idea/
+*.iml
+
+# Testes
+test-output/
+
+# Configuração temporária
+.env
