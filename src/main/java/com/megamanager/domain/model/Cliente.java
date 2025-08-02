@@ -15,7 +15,7 @@ public class Cliente implements Serializable {
 	private Long id;
 	private String nome;
 	private String email;
-	private boolean socio;
+	private PerfilCliente perfil;
 	
 
 }
