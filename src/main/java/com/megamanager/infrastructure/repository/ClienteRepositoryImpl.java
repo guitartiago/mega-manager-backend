@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.megamanager.adapter.persistence.mapper.ClienteMapper;
 import com.megamanager.application.port.out.ClienteRepository;
 import com.megamanager.domain.model.Cliente;
+import com.megamanager.persistence.entity.ClienteEntity;
 
 @Repository
 public class ClienteRepositoryImpl implements ClienteRepository {
@@ -21,15 +22,14 @@ public class ClienteRepositoryImpl implements ClienteRepository {
 
     @Override
     public Cliente salvar(Cliente cliente) {
-        return ClienteMapper.toDomain(
-            jpaRepository.save(ClienteMapper.toEntity(cliente))
-        );
+        ClienteEntity entity = ClienteMapper.toEntity(cliente);
+        ClienteEntity saved = jpaRepository.save(entity);
+        return ClienteMapper.toDomain(saved);
     }
 
     @Override
     public Optional<Cliente> buscarPorId(Long id) {
-        return jpaRepository.findById(id)
-                .map(ClienteMapper::toDomain);
+        return jpaRepository.findById(id).map(ClienteMapper::toDomain);
     }
 
     @Override
@@ -38,5 +38,10 @@ public class ClienteRepositoryImpl implements ClienteRepository {
                 .stream()
                 .map(ClienteMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void excluir(Long id) {
+        jpaRepository.deleteById(id);
     }
 }
