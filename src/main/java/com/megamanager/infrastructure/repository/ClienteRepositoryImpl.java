@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.megamanager.adapter.persistence.mapper.ClienteMapper;
 import com.megamanager.application.port.out.ClienteRepository;
 import com.megamanager.domain.model.Cliente;
-import com.megamanager.persistence.entity.ClienteEntity;
+import com.megamanager.infrastructure.entity.ClienteEntity;
 
 @Repository
 public class ClienteRepositoryImpl implements ClienteRepository {

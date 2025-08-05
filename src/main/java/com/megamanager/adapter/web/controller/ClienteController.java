@@ -1,4 +1,4 @@
-package com.megamanager.infrastructure.controller;
+package com.megamanager.adapter.web.controller;
 
 import java.util.List;
 

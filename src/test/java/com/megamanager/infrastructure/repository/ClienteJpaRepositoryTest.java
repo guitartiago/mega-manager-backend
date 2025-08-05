@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.megamanager.domain.model.PerfilCliente;
-import com.megamanager.persistence.entity.ClienteEntity;
+import com.megamanager.infrastructure.entity.ClienteEntity;
 
 @DataJpaTest
 public class ClienteJpaRepositoryTest {

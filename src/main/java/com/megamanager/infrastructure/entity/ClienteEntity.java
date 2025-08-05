@@ -1,4 +1,4 @@
-package com.megamanager.persistence.entity;
+package com.megamanager.infrastructure.entity;
 
 import com.megamanager.domain.model.PerfilCliente;
 

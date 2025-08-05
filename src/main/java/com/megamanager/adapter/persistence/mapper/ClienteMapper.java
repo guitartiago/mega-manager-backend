@@ -1,7 +1,7 @@
 package com.megamanager.adapter.persistence.mapper;
 
 import com.megamanager.domain.model.Cliente;
-import com.megamanager.persistence.entity.ClienteEntity;
+import com.megamanager.infrastructure.entity.ClienteEntity;
 
 public class ClienteMapper {
 
