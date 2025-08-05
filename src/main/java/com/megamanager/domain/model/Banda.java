@@ -3,6 +3,8 @@ package com.megamanager.domain.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.megamanager.cliente.domain.Cliente;
+
 import lombok.Data;
 
 @Data

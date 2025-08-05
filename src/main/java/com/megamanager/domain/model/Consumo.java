@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.megamanager.cliente.domain.Cliente;
+
 import lombok.Data;
 
 @Data
