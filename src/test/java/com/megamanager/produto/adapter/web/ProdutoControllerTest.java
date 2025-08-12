@@ -67,6 +67,19 @@ public class ProdutoControllerTest {
     }
 	
 	@Test
+	@DisplayName("Não deve cadastrar produto sem preço (400)")
+	void naoDeveCadastrarProdutoSemPreco() throws Exception {
+	    ProdutoRequestDTO request = new ProdutoRequestDTO();
+	    request.setNome("Cerveja sem preço");
+	    // precoVenda = null
+
+	    mockMvc.perform(post("/produtos")
+	            .contentType(MediaType.APPLICATION_JSON)
+	            .content(objectMapper.writeValueAsString(request)))
+	            .andExpect(status().isBadRequest());
+	}
+	
+	@Test
     @DisplayName("Deve retornar 200 e lista de clientes no GET /clientes")
     void deveListarTodosProdutos() throws Exception {
         Mockito.when(listarProdutoUseCase.listarTodos()).thenReturn(List.of());
