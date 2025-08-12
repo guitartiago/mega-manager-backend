@@ -7,6 +7,5 @@ import com.megamanager.estoque.domain.EntradaEstoque;
 public interface EntradaEstoqueRepository {
 	
 	EntradaEstoque salvar(EntradaEstoque entradaEstoque);
-	List<EntradaEstoque> listarPorProduto(Long idProduto);
-
+	List<EntradaEstoque> buscarPorProdutoId(Long produtoId);
 }

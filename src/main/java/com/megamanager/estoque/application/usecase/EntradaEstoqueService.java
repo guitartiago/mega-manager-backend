@@ -1,5 +1,8 @@
 package com.megamanager.estoque.application.usecase;
 
+import java.util.List;
+
+import com.megamanager.estoque.application.port.in.ListarEntradasPorProdutoUseCase;
 import com.megamanager.estoque.application.port.in.RegistrarEntradaUseCase;
 import com.megamanager.estoque.application.port.out.EntradaEstoqueRepository;
 import com.megamanager.estoque.domain.EntradaEstoque;
@@ -7,7 +10,7 @@ import com.megamanager.estoque.domain.EntradaEstoque;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class EntradaEstoqueService implements RegistrarEntradaUseCase {
+public class EntradaEstoqueService implements RegistrarEntradaUseCase, ListarEntradasPorProdutoUseCase {
 	
 	private final EntradaEstoqueRepository entradaEstoqueRepository;
 
@@ -16,5 +19,10 @@ public class EntradaEstoqueService implements RegistrarEntradaUseCase {
 		
 		return entradaEstoqueRepository.salvar(entradaEstoque);
 	}
+	
+	@Override
+    public List<EntradaEstoque> listarPorProdutoId(Long produtoId) {
+        return entradaEstoqueRepository.buscarPorProdutoId(produtoId);
+    }
 
 }
