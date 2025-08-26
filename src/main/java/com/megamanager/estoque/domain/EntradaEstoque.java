@@ -26,7 +26,7 @@ public class EntradaEstoque {
     		throw new IllegalArgumentException("Id do Produto não pode ser null");    		
     	} 
     	
-    	if (quantidade > 0) {
+    	if (quantidade <= 0) {
             throw new IllegalArgumentException("Quantidade deve ser maior que 0 (Zero)");
         }
 
@@ -46,7 +46,7 @@ public class EntradaEstoque {
 		this.saldo = saldo;
 	}
     
-    public static EntradaEstoque criar(Long id
+    public static EntradaEstoque reconstruir(Long id
     		, Long produtoId
     		, int quantidade
     		, BigDecimal precoCustoUnitario
@@ -66,8 +66,17 @@ public class EntradaEstoque {
         return saldo > 0;
     }
 
+    public void abaterSaldo(int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade a abater deve ser maior que zero");
+        }
 
+        if (quantidade > this.saldo) {
+            System.out.println("⚠️ Atenção: tentando abater mais do que o saldo disponível. Estoque ficará negativo.");
+        }
 
+        this.saldo -= quantidade;
+    }
 
 	
 }

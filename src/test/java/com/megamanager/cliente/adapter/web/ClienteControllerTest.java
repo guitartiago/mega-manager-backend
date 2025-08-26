@@ -23,6 +23,7 @@ import com.megamanager.cliente.application.port.in.AtualizarClienteUseCase;
 import com.megamanager.cliente.application.port.in.BuscarClienteUseCase;
 import com.megamanager.cliente.application.port.in.CadastrarClienteUseCase;
 import com.megamanager.cliente.application.port.in.ExcluirClienteUseCase;
+import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
 
 @WebMvcTest(ClienteController.class)
@@ -74,11 +75,12 @@ public class ClienteControllerTest {
     @Test
     @DisplayName("Deve retornar 200 ao buscar cliente existente por ID")
     void deveBuscarClientePorId() throws Exception {
-        var cliente = new com.megamanager.cliente.domain.Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Tiago");
-        cliente.setEmail("tiago@megafuzz.com");
-        cliente.setPerfil(PerfilCliente.SOCIO);
+        var cliente = Cliente.reconstruir(
+        		1L,
+        		"Tiago", 
+        		"tiago@megamanager.com", 
+        		PerfilCliente.SOCIO
+        	);
 
         Mockito.when(buscarClienteUseCase.buscarPorId(1L)).thenReturn(java.util.Optional.of(cliente));
 
@@ -98,12 +100,12 @@ public class ClienteControllerTest {
     @Test
     @DisplayName("Deve atualizar cliente existente e retornar 200")
     void deveAtualizarClienteComSucesso() throws Exception {
-        var clienteAtualizado = new com.megamanager.cliente.domain.Cliente();
-        clienteAtualizado.setId(1L);
-        clienteAtualizado.setNome("Tiago Atualizado");
-        clienteAtualizado.setEmail("tiago@megafuzz.com");
-        clienteAtualizado.setPerfil(PerfilCliente.SOCIO);
-
+        var clienteAtualizado = Cliente.reconstruir(
+        		1L, 
+        		"Tiago Atualizado", 
+        		"tiago.alterado@megafuzz.com",
+        		PerfilCliente.SOCIO);
+        
         Mockito.when(atualizarClienteUseCase.atualizar(Mockito.eq(1L), Mockito.any()))
                 .thenReturn(java.util.Optional.of(clienteAtualizado));
 

@@ -2,7 +2,6 @@ package com.megamanager.cliente.adapter.persistence;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -34,8 +33,7 @@ public class ClienteRepositoryAdapter implements ClienteRepository {
     public List<Cliente> listarTodos() {
         return jpaRepository.findAll()
                 .stream()
-                .map(ClienteMapper::toDomain)
-                .collect(Collectors.toList());
+                .map(ClienteMapper::toDomain).toList();
     }
 
     @Override

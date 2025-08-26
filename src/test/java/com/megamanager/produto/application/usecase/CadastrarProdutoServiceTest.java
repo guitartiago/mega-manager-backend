@@ -28,10 +28,10 @@ public class CadastrarProdutoServiceTest {
 	@Test
 	@DisplayName("Deve cadastrar produto")
 	void deveCadastrarProduto() {
-		Produto produto = new Produto();
-		produto.setNome("Cerveja Budweiser 269ml");
-		produto.setPrecoVenda(new BigDecimal("6.00"));
-		
+		Produto produto = Produto.criar(
+				"Cerveja Budweiser 269ml",
+				new BigDecimal("6.00"));
+				
 		when(produtoRepository.salvar(produto)).thenReturn(produto);
 
         Produto salvo = service.cadastrar(produto);

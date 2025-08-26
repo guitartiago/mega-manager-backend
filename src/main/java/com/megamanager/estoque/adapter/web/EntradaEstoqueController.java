@@ -2,7 +2,6 @@ package com.megamanager.estoque.adapter.web;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +18,10 @@ import com.megamanager.estoque.application.port.in.ListarEntradasPorProdutoUseCa
 import com.megamanager.estoque.application.port.in.RegistrarEntradaUseCase;
 import com.megamanager.estoque.domain.EntradaEstoque;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -29,13 +32,20 @@ public class EntradaEstoqueController {
 
     private final ListarEntradasPorProdutoUseCase listarEntradasPorProdutoUseCase;
     private final RegistrarEntradaUseCase registrarEntradaUseCase;
-
+    
+    @Operation(
+	    summary = "Lista entradas de estoque por produto",
+	    description = "Retorna todas as entradas (compras) feitas para um produto específico"
+	)
+	@ApiResponses(value = {
+	    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso"),
+	    @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+	})
     @GetMapping("/produto/{produtoId}")
-    public ResponseEntity<List<EntradaEstoqueResponseDTO>> listarPorProduto(@PathVariable Long produtoId) {
+    public ResponseEntity<List<EntradaEstoqueResponseDTO>> listarPorProduto(@Parameter(description = "ID do produto") @PathVariable Long produtoId) {
         var entradas = listarEntradasPorProdutoUseCase.listarPorProdutoId(produtoId);
         var response = entradas.stream()
-                .map(EntradaEstoqueDtoMapper::toResponse)
-                .collect(Collectors.toList());
+                .map(EntradaEstoqueDtoMapper::toResponse).toList();
         return ResponseEntity.ok(response);
     }
 

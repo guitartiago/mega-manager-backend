@@ -1,13 +1,14 @@
 package com.megamanager.produto.adapter.persistence;
 
-import com.megamanager.produto.application.port.out.ProdutoRepository;
-import com.megamanager.produto.domain.Produto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Component;
+
+import com.megamanager.produto.application.port.out.ProdutoRepository;
+import com.megamanager.produto.domain.Produto;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class ProdutoRepositoryAdapter implements ProdutoRepository {
         return produtoJpaRepository.findAll()
                 .stream()
                 .map(ProdutoMapper::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

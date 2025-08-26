@@ -16,7 +16,7 @@ public class EntradaEstoqueMapper {
     }
 
     public static EntradaEstoque toDomain(EntradaEstoqueEntity entity) {
-        EntradaEstoque entradaEstoque = EntradaEstoque.criar(entity.getId()
+        EntradaEstoque entradaEstoque = EntradaEstoque.reconstruir(entity.getId()
         		, entity.getProdutoId()
         		, entity.getQuantidade()
         		, entity.getPrecoCustoUnitario()

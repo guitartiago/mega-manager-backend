@@ -18,11 +18,10 @@ public class ClienteMapper {
     public static Cliente toDomain(ClienteEntity entity) {
         if (entity == null) return null;
 
-        Cliente cliente = new Cliente();
-        cliente.setId(entity.getId());
-        cliente.setNome(entity.getNome());
-        cliente.setEmail(entity.getEmail());
-        cliente.setPerfil(entity.getPerfil());
+        Cliente cliente = Cliente.reconstruir(entity.getId()
+        		, entity.getNome()
+        		, entity.getEmail()
+        		, entity.getPerfil());
         return cliente;
     }
 }

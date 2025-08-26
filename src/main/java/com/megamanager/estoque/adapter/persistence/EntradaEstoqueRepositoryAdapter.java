@@ -13,18 +13,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EntradaEstoqueRepositoryAdapter implements EntradaEstoqueRepository {
 
-    private final EntradaEstoqueJpaRepository produtoJpaRepository;
+    private final EntradaEstoqueJpaRepository estoqueJpaRepository;
 
     @Override
     public EntradaEstoque salvar(EntradaEstoque produto) {
         EntradaEstoqueEntity entity = EntradaEstoqueMapper.toEntity(produto);
-        EntradaEstoqueEntity salvo = produtoJpaRepository.save(entity);
+        EntradaEstoqueEntity salvo = estoqueJpaRepository.save(entity);
         return EntradaEstoqueMapper.toDomain(salvo);
     }
 
 	@Override
-	public List<EntradaEstoque> listarPorProduto(Long idProduto) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EntradaEstoque> buscarPorProdutoId(Long produtoId) {
+		return estoqueJpaRepository.findByProdutoId(produtoId).stream().map(EntradaEstoqueMapper::toDomain).toList();
 	}
 }

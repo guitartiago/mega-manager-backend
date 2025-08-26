@@ -2,7 +2,6 @@ package com.megamanager.produto.adapter.web;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +41,7 @@ public class ProdutoController {
         List<Produto> clientes = listarProdutosUseCase.listarTodos();
         List<ProdutoResponseDTO> response = clientes.stream()
                 .map(ProdutoDtoMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(response);
     }
     
@@ -52,7 +51,7 @@ public class ProdutoController {
     	List<ProdutoResponseDTO> response = dtos.stream()
     			.map(ProdutoDtoMapper::toDomain)
     			.map(cadastrarProdutoUseCase::cadastrar)
-    			.map(ProdutoDtoMapper::toResponse).collect(Collectors.toList());
+    			.map(ProdutoDtoMapper::toResponse).toList();
     	
         return ResponseEntity.created(URI.create("/produtos")).body(response);
     }

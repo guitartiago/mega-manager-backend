@@ -7,10 +7,9 @@ import com.megamanager.cliente.domain.Cliente;
 public class ClienteDtoMapper {
 
     public static Cliente toDomain(ClienteRequestDTO dto) {
-        Cliente cliente = new Cliente();
-        cliente.setNome(dto.getNome());
-        cliente.setEmail(dto.getEmail());
-        cliente.setPerfil(dto.getPerfil());
+        Cliente cliente = Cliente.criar(dto.getNome()
+        		, dto.getEmail()
+        		, dto.getPerfil());
         return cliente;
     }
 

@@ -32,10 +32,10 @@ public class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve cadastrar cliente e retornar com sucesso")
     void deveCadastrarCliente() {
-        Cliente cliente = new Cliente();
-        cliente.setNome("Tiago");
-        cliente.setEmail("tiago@megafuzz.com");
-        cliente.setPerfil(PerfilCliente.SOCIO);
+        Cliente cliente = Cliente.criar(
+        		"Tiago",
+        		"tiago@megafuzz.com", 
+        		PerfilCliente.SOCIO);
 
         when(clienteRepository.salvar(cliente)).thenReturn(cliente);
 
@@ -48,9 +48,9 @@ public class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve retornar cliente por ID")
     void deveBuscarClientePorId() {
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        when(clienteRepository.buscarPorId(1L)).thenReturn(Optional.of(cliente));
+    	Cliente cliente = Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", PerfilCliente.SOCIO);
+
+    	when(clienteRepository.buscarPorId(1L)).thenReturn(Optional.of(cliente));
 
         Optional<Cliente> resultado = service.buscarPorId(1L);
 
@@ -61,7 +61,7 @@ public class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve retornar lista de clientes")
     void deveListarTodosClientes() {
-        when(clienteRepository.listarTodos()).thenReturn(List.of(new Cliente(), new Cliente()));
+        when(clienteRepository.listarTodos()).thenReturn(List.of(Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", PerfilCliente.SOCIO), Cliente.reconstruir(2L, "Yuri", "Yuri@megafuzz.com", PerfilCliente.SOCIO)));
 
         List<Cliente> resultado = service.listarTodos();
 
@@ -72,12 +72,9 @@ public class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve atualizar cliente existente")
     void deveAtualizarCliente() {
-        Cliente original = new Cliente();
-        original.setId(1L);
-        original.setNome("Tiago");
+        Cliente original = Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", PerfilCliente.SOCIO);
 
-        Cliente atualizado = new Cliente();
-        atualizado.setNome("Novo Nome");
+        Cliente atualizado = Cliente.reconstruir(1L, "Novo Nome", "tiago@megafuzz.com", PerfilCliente.SOCIO);
 
         when(clienteRepository.buscarPorId(1L)).thenReturn(Optional.of(original));
         when(clienteRepository.salvar(any(Cliente.class))).thenReturn(atualizado);

@@ -7,11 +7,10 @@ import com.megamanager.produto.domain.Produto;
 public class ProdutoDtoMapper {
 
     public static Produto toDomain(ProdutoRequestDTO dto) {
-        Produto produto = new Produto();
-        produto.setNome(dto.getNome());
-        produto.setPrecoVenda(dto.getPrecoVenda());
-        produto.setAtivo(dto.isAtivo());
-        return produto;
+        return Produto.criar(
+        		dto.getNome(),
+        		dto.getPrecoVenda()
+        	);
     }
 
     public static ProdutoResponseDTO toResponse(Produto produto) {

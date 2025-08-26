@@ -13,12 +13,7 @@ public class ProdutoMapper {
         return entity;
     }
 
-    public static Produto toDomain(ProdutoEntity entity) {
-        Produto produto = new Produto();
-        produto.setId(entity.getId());
-        produto.setNome(entity.getNome());
-        produto.setPrecoVenda(entity.getPrecoVenda());
-        produto.setAtivo(entity.isAtivo());
-        return produto;
+    public static Produto toDomain(ProdutoEntity entity) {       
+        return Produto.reconstruir(entity.getId(), entity.getNome(), entity.getPrecoVenda(), entity.isAtivo());
     }
 }
