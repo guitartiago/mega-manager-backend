@@ -29,4 +29,19 @@ public class ConsumoRepositoryAdapter implements ConsumoRepository {
                 .map(ConsumoMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<Consumo> buscarNaoPagosPorCliente(Long clienteId) {
+        return jpaRepository.findByClienteIdAndPagoFalse(clienteId)
+                .stream()
+                .map(ConsumoMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public void marcarConsumosComoPagos(Long clienteId) {
+        List<ConsumoEntity> entidades = jpaRepository.findByClienteIdAndPagoFalse(clienteId);
+        entidades.forEach(e -> e.setPago(true));
+        jpaRepository.saveAll(entidades);
+    }
 }
