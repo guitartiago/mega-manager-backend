@@ -23,7 +23,7 @@ import com.megamanager.produto.application.port.in.CadastrarProdutoUseCase;
 import com.megamanager.produto.application.port.in.ListarProdutosUseCase;
 
 @WebMvcTest(ProdutoController.class)
-public class ProdutoControllerTest {
+class ProdutoControllerTest {
 	
 	@Autowired
     private MockMvc mockMvc;

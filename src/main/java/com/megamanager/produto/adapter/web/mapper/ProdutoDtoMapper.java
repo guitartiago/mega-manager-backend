@@ -4,6 +4,9 @@ import com.megamanager.produto.adapter.web.dto.ProdutoRequestDTO;
 import com.megamanager.produto.adapter.web.dto.ProdutoResponseDTO;
 import com.megamanager.produto.domain.Produto;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ProdutoDtoMapper {
 
     public static Produto toDomain(ProdutoRequestDTO dto) {

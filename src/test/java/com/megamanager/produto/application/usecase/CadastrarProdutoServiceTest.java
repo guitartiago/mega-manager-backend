@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import com.megamanager.produto.application.port.out.ProdutoRepository;
 import com.megamanager.produto.domain.Produto;
 
-public class CadastrarProdutoServiceTest {
+class CadastrarProdutoServiceTest {
 	
 	private ProdutoRepository produtoRepository;
 	private CadastrarProdutoService service;

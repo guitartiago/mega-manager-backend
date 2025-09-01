@@ -9,4 +9,9 @@ public interface ConsumoRepository {
     Consumo salvar(Consumo consumo);
 
     List<Consumo> buscarPorCliente(Long clienteId);
+    
+    List<Consumo> buscarNaoPagosPorCliente(Long clienteId);
+    
+    void marcarConsumosComoPagos(Long clienteId);
+  
 }

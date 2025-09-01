@@ -27,7 +27,7 @@ import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
 
 @WebMvcTest(ClienteController.class)
-public class ClienteControllerTest {
+class ClienteControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

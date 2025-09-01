@@ -2,6 +2,9 @@ package com.megamanager.estoque.adapter.persistence;
 
 import com.megamanager.estoque.domain.EntradaEstoque;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class EntradaEstoqueMapper {
 
     public static EntradaEstoqueEntity toEntity(EntradaEstoque entradaEstoque) {
@@ -16,13 +19,12 @@ public class EntradaEstoqueMapper {
     }
 
     public static EntradaEstoque toDomain(EntradaEstoqueEntity entity) {
-        EntradaEstoque entradaEstoque = EntradaEstoque.reconstruir(entity.getId()
+       
+        return EntradaEstoque.reconstruir(entity.getId()
         		, entity.getProdutoId()
         		, entity.getQuantidade()
         		, entity.getPrecoCustoUnitario()
         		, entity.getDataCompra()
         		, entity.getSaldo());
-       
-        return entradaEstoque;
     }
 }

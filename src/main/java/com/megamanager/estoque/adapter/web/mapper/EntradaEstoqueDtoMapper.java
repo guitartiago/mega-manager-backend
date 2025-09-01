@@ -1,11 +1,14 @@
 package com.megamanager.estoque.adapter.web.mapper;
 
+import java.time.LocalDateTime;
+
 import com.megamanager.estoque.adapter.web.dto.EntradaEstoqueRequestDTO;
 import com.megamanager.estoque.adapter.web.dto.EntradaEstoqueResponseDTO;
 import com.megamanager.estoque.domain.EntradaEstoque;
 
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class EntradaEstoqueDtoMapper {
 
     public static EntradaEstoque toDomain(EntradaEstoqueRequestDTO dto) {

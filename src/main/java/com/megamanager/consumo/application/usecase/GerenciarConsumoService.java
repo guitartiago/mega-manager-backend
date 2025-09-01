@@ -15,6 +15,7 @@ import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCa
 import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
 import com.megamanager.consumo.application.port.out.ConsumoRepository;
 import com.megamanager.consumo.domain.Consumo;
+import com.megamanager.consumo.domain.DadosProduto;
 import com.megamanager.estoque.application.port.out.EntradaEstoqueRepository;
 import com.megamanager.estoque.domain.EntradaEstoque;
 import com.megamanager.produto.application.port.out.ProdutoRepository;
@@ -36,25 +37,25 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
     @Override
     public Consumo registrar(Consumo consumo) {
         log.info("➡️ Iniciando registro de consumo para cliente {} - produto {} - quantidade {}",
-                consumo.getClienteId(), consumo.getProdutoId(), consumo.getQuantidade());
+                consumo.getClienteId(), consumo.getDadosProduto().getProdutoId(), consumo.getDadosProduto().getQuantidade());
 
         Cliente cliente = clienteRepository.buscarPorId(consumo.getClienteId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
 
-        Produto produto = produtoRepository.buscarPorId(consumo.getProdutoId())
+        Produto produto = produtoRepository.buscarPorId(consumo.getDadosProduto().getProdutoId())
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
 
         boolean isSocio = cliente.getPerfil() == PerfilCliente.SOCIO;
 
-        List<EntradaEstoque> entradas = entradaEstoqueRepository.buscarPorProdutoId(consumo.getProdutoId()).stream()
+        List<EntradaEstoque> entradasEstoque = entradaEstoqueRepository.buscarPorProdutoId(consumo.getDadosProduto().getProdutoId()).stream()
                 .filter(EntradaEstoque::possuiSaldoDisponivel)
                 .sorted(Comparator.comparing(EntradaEstoque::getDataCompra))
                 .toList();
 
-        int restante = consumo.getQuantidade();
+        int restante = consumo.getDadosProduto().getQuantidade();
         Consumo ultimoConsumo = null;
 
-        for (EntradaEstoque entrada : entradas) {
+        for (EntradaEstoque entrada : entradasEstoque) {
             if (restante <= 0) break;
 
             int podeAbater = Math.min(restante, entrada.getSaldo());
@@ -71,9 +72,11 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
 
             Consumo parcial = Consumo.criar(
                     consumo.getClienteId(),
-                    consumo.getProdutoId(),
-                    podeAbater,
-                    valorUnitario,
+                    new DadosProduto(
+                    		consumo.getDadosProduto().getProdutoId(), 
+                    		podeAbater, 
+                    		valorUnitario
+                    	),
                     consumo.getDataHora(),
                     entrada.getId()
             );
@@ -91,9 +94,11 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
 
             Consumo fallback = Consumo.criar(
                     consumo.getClienteId(),
-                    consumo.getProdutoId(),
-                    restante,
-                    valorUnitario,
+                    new DadosProduto(
+                    		consumo.getDadosProduto().getProdutoId(),
+                    		restante,
+                    		valorUnitario
+                    	),
                     consumo.getDataHora(),
                     null
             );
@@ -103,7 +108,7 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
         }
 
         log.info("✅ Registro de consumo finalizado para cliente {} - produto {}",
-                consumo.getClienteId(), consumo.getProdutoId());
+                consumo.getClienteId(), consumo.getDadosProduto().getProdutoId());
 
         return ultimoConsumo;
     }

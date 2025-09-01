@@ -23,6 +23,7 @@ import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
 import com.megamanager.consumo.application.port.out.ConsumoRepository;
 import com.megamanager.consumo.domain.Consumo;
+import com.megamanager.consumo.domain.DadosProduto;
 import com.megamanager.estoque.application.port.out.EntradaEstoqueRepository;
 import com.megamanager.estoque.domain.EntradaEstoque;
 import com.megamanager.produto.application.port.out.ProdutoRepository;
@@ -68,7 +69,7 @@ class GerenciarConsumoServiceTest {
         when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
         when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of(entrada1, entrada2));
 
-        Consumo pedido = Consumo.criar(clienteId, produtoId, 3, new BigDecimal("6.00"), LocalDateTime.now(), null);
+        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 3, new BigDecimal("6.00")), LocalDateTime.now(), null);
 
         when(consumoRepository.salvar(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -79,7 +80,7 @@ class GerenciarConsumoServiceTest {
 
         assertNotNull(retorno);
         assertEquals(101L, retorno.getEntradaEstoqueId()); // deve ser o último lote usado
-        assertEquals(1, retorno.getQuantidade());
+        assertEquals(1, retorno.getDadosProduto().getQuantidade());
     }
 
     @Test
@@ -97,14 +98,14 @@ class GerenciarConsumoServiceTest {
         when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of(entrada));
         when(consumoRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
 
-        Consumo pedido = Consumo.criar(clienteId, produtoId, 1, new BigDecimal("5.00"), LocalDateTime.now(), null);
+        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 1, new BigDecimal("5.00")), LocalDateTime.now(), null);
 
         Consumo retorno = service.registrar(pedido);
 
         verify(consumoRepository).salvar(any());
         verify(entradaEstoqueRepository).salvar(any());
 
-        assertEquals(new BigDecimal("5.00"), retorno.getValorUnitario());
+        assertEquals(new BigDecimal("5.00"), retorno.getDadosProduto().getValorUnitario());
     }
 
     @Test
@@ -121,7 +122,7 @@ class GerenciarConsumoServiceTest {
         when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of());
         when(consumoRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
 
-        Consumo pedido = Consumo.criar(clienteId, produtoId, 2, new BigDecimal("3.00"), LocalDateTime.now(), null);
+        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 2, new BigDecimal("3.00")), LocalDateTime.now(), null);
 
         Consumo retorno = service.registrar(pedido);
 

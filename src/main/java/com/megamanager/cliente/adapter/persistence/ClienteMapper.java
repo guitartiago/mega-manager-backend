@@ -2,6 +2,9 @@ package com.megamanager.cliente.adapter.persistence;
 
 import com.megamanager.cliente.domain.Cliente;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ClienteMapper {
 
     public static ClienteEntity toEntity(Cliente cliente) {
@@ -18,10 +21,9 @@ public class ClienteMapper {
     public static Cliente toDomain(ClienteEntity entity) {
         if (entity == null) return null;
 
-        Cliente cliente = Cliente.reconstruir(entity.getId()
+        return Cliente.reconstruir(entity.getId()
         		, entity.getNome()
         		, entity.getEmail()
         		, entity.getPerfil());
-        return cliente;
     }
 }

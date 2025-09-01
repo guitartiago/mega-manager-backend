@@ -2,6 +2,9 @@ package com.megamanager.produto.adapter.persistence;
 
 import com.megamanager.produto.domain.Produto;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ProdutoMapper {
 
     public static ProdutoEntity toEntity(Produto produto) {

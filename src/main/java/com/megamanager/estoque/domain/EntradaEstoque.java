@@ -3,10 +3,15 @@ package com.megamanager.estoque.domain;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 
 @Getter
 public class EntradaEstoque {
+	
+    private static final Logger log = LoggerFactory.getLogger(EntradaEstoque.class);
 
     private Long id;
     private Long produtoId;
@@ -72,7 +77,7 @@ public class EntradaEstoque {
         }
 
         if (quantidade > this.saldo) {
-            System.out.println("⚠️ Atenção: tentando abater mais do que o saldo disponível. Estoque ficará negativo.");
+           log.warn("⚠️ Atenção: tentando abater mais do que o saldo disponível. Estoque ficará negativo.");
         }
 
         this.saldo -= quantidade;

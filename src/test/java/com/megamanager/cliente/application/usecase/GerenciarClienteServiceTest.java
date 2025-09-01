@@ -18,7 +18,7 @@ import com.megamanager.cliente.application.port.out.ClienteRepository;
 import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
 
-public class GerenciarClienteServiceTest {
+class GerenciarClienteServiceTest {
 
     private ClienteRepository clienteRepository;
     private GerenciarClienteService service;

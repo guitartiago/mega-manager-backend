@@ -1,7 +1,6 @@
 package com.megamanager.consumo.adapter.web;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +47,7 @@ public class ConsumoController {
         var consumos = listarConsumosUseCase.listarPorCliente(clienteId);
         var responses = consumos.stream()
                 .map(ConsumoDtoMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
         return ResponseEntity.ok(responses);
     }
 }
