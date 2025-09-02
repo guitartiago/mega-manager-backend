@@ -17,7 +17,6 @@ import com.megamanager.consumo.application.port.in.FecharContaClienteUseCase;
 import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.PagarContaClienteUseCase;
 import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
-import com.megamanager.produto.application.port.out.ProdutoRepository;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
