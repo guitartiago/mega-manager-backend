@@ -1,7 +1,5 @@
 package com.megamanager.consumo.application.usecase;
 
-import static java.util.stream.Collectors.toList;
-
 import java.math.BigDecimal;
 import java.util.List;
 
