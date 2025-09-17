@@ -29,7 +29,7 @@ public class JwtTokenProvider implements TokenProvider {
 
     return Jwts.builder()
         .subject(subject)
-        .claim("roles", String.join(",", roles))
+        .claim("roles", roles)
         .issuedAt(Date.from(now))
         .expiration(Date.from(exp))
         .signWith(key, Jwts.SIG.HS256)
@@ -56,7 +56,10 @@ public class JwtTokenProvider implements TokenProvider {
   public Set<String> roles(String token) {
     Object raw = Jwts.parser().verifyWith(key).build()
         .parseSignedClaims(token).getPayload().get("roles");
-    String csv = raw == null ? "" : raw.toString();
+    if (raw == null) return Set.of();
+    if (raw instanceof java.util.Collection<?> c)
+        return c.stream().map(Object::toString).collect(Collectors.toSet());
+    String csv = raw.toString();
     return csv.isBlank() ? Set.of()
         : Set.of(csv.split(",")).stream().map(String::trim).collect(Collectors.toSet());
   }
