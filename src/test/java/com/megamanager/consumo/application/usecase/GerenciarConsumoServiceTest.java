@@ -59,7 +59,7 @@ class GerenciarConsumoServiceTest {
         Long clienteId = 1L;
         Long produtoId = 10L;
 
-        Cliente socio = Cliente.reconstruir(clienteId, "Tiago", "email@email.com", PerfilCliente.SOCIO);
+        Cliente socio = Cliente.reconstruir(clienteId, "Tiago", "email@email.com", "11912345678", PerfilCliente.SOCIO);
         Produto produto = Produto.reconstruir(produtoId, "Cerveja", new BigDecimal("6.00"), true);
 
         EntradaEstoque entrada1 = EntradaEstoque.reconstruir(100L, produtoId, 2, new BigDecimal("2.50"), LocalDateTime.now().minusDays(2), 2);
@@ -89,7 +89,7 @@ class GerenciarConsumoServiceTest {
         Long clienteId = 2L;
         Long produtoId = 20L;
 
-        Cliente naoSocio = Cliente.reconstruir(clienteId, "Cliente", "nao@email.com", PerfilCliente.COMUM);
+        Cliente naoSocio = Cliente.reconstruir(clienteId, "Cliente", "nao@email.com", "11912345678", PerfilCliente.COMUM);
         Produto produto = Produto.reconstruir(produtoId, "Refri", new BigDecimal("5.00"), true);
         EntradaEstoque entrada = EntradaEstoque.reconstruir(200L, produtoId, 2, new BigDecimal("2.00"), LocalDateTime.now().minusDays(1), 2);
 
@@ -114,7 +114,7 @@ class GerenciarConsumoServiceTest {
         Long clienteId = 3L;
         Long produtoId = 30L;
 
-        Cliente socio = Cliente.reconstruir(clienteId, "Zé", "ze@email.com", PerfilCliente.SOCIO);
+        Cliente socio = Cliente.reconstruir(clienteId, "Zé", "ze@email.com", "11912345678", PerfilCliente.SOCIO);
         Produto produto = Produto.reconstruir(produtoId, "Água", new BigDecimal("3.00"), true);
 
         when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(socio));

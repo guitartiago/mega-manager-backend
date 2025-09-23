@@ -35,7 +35,7 @@ class GerenciarClienteServiceTest {
         Cliente cliente = Cliente.criar(
         		"Tiago",
         		"tiago@megafuzz.com", 
-        		PerfilCliente.SOCIO);
+        		"11192345678", PerfilCliente.SOCIO);
 
         when(clienteRepository.salvar(cliente)).thenReturn(cliente);
 
@@ -48,7 +48,7 @@ class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve retornar cliente por ID")
     void deveBuscarClientePorId() {
-    	Cliente cliente = Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", PerfilCliente.SOCIO);
+    	Cliente cliente = Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", "11192345678", PerfilCliente.SOCIO);
 
     	when(clienteRepository.buscarPorId(1L)).thenReturn(Optional.of(cliente));
 
@@ -61,7 +61,11 @@ class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve retornar lista de clientes")
     void deveListarTodosClientes() {
-        when(clienteRepository.listarTodos()).thenReturn(List.of(Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", PerfilCliente.SOCIO), Cliente.reconstruir(2L, "Yuri", "Yuri@megafuzz.com", PerfilCliente.SOCIO)));
+        when(clienteRepository.listarTodos())
+        	.thenReturn(List.of(
+        			Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", "11192345678", PerfilCliente.SOCIO)
+        			, Cliente.reconstruir(2L, "Yuri", "Yuri@megafuzz.com", "11999225644", PerfilCliente.SOCIO)
+        	));
 
         List<Cliente> resultado = service.listarTodos();
 
@@ -72,9 +76,9 @@ class GerenciarClienteServiceTest {
     @Test
     @DisplayName("Deve atualizar cliente existente")
     void deveAtualizarCliente() {
-        Cliente original = Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", PerfilCliente.SOCIO);
+        Cliente original = Cliente.reconstruir(1l, "Tiago", "tiago@megafuzz.com", "11192345678", PerfilCliente.SOCIO);
 
-        Cliente atualizado = Cliente.reconstruir(1L, "Novo Nome", "tiago@megafuzz.com", PerfilCliente.SOCIO);
+        Cliente atualizado = Cliente.reconstruir(1L, "Novo Nome", "tiago@megafuzz.com", "11192345678", PerfilCliente.SOCIO);
 
         when(clienteRepository.buscarPorId(1L)).thenReturn(Optional.of(original));
         when(clienteRepository.salvar(any(Cliente.class))).thenReturn(atualizado);

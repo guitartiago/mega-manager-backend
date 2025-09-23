@@ -3,11 +3,14 @@ package com.megamanager.produto.domain;
 import java.math.BigDecimal;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Produto {
+	@Setter
     private Long id;
-    private String nome;         
+    
+	private String nome;         
     private BigDecimal precoVenda;  
     private boolean ativo;  
     

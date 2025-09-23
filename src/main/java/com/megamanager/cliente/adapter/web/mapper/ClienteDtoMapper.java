@@ -12,7 +12,7 @@ public class ClienteDtoMapper {
     public static Cliente toDomain(ClienteRequestDTO dto) {
         return  Cliente.criar(dto.getNome()
         		, dto.getEmail()
-        		, dto.getPerfil());
+        		, dto.getCelular(), dto.getPerfil());
     }
 
     public static ClienteResponseDTO toResponse(Cliente cliente) {
@@ -20,6 +20,7 @@ public class ClienteDtoMapper {
             cliente.getId(),
             cliente.getNome(),
             cliente.getEmail(),
+            cliente.getCelular(),
             cliente.getPerfil()
         );
     }

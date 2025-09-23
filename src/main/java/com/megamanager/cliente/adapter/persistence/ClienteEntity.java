@@ -2,6 +2,7 @@ package com.megamanager.cliente.adapter.persistence;
 
 import com.megamanager.cliente.domain.PerfilCliente;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,6 +13,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Entity
@@ -32,4 +34,9 @@ public class ClienteEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private PerfilCliente perfil;
+    
+    @Column(length = 20, nullable = false)
+    @NotBlank(message = "celular é obrigatório")
+    @Pattern(regexp = "^\\+?\\d{10,13}$", message = "celular inválido")
+    private String celular;
 }

@@ -44,7 +44,7 @@ class FecharContaClienteServiceTest {
         Long clienteId = 1L;
         Long produtoId = 10L;
         Produto produto = Produto.criar("Cerveja Original", new BigDecimal("6.00"));
-        Cliente cliente = Cliente.reconstruir(clienteId, "Tiago", "tiago@email.com", PerfilCliente.COMUM);
+        Cliente cliente = Cliente.reconstruir(clienteId, "Tiago", "tiago@email.com", "11912345678", PerfilCliente.COMUM);
         DadosProduto dados = new DadosProduto(produtoId, 2, new BigDecimal("6.00")); // valorUnitario do consumo não será usado
         Consumo consumo = Consumo.reconstruir(1L, clienteId, dados, LocalDateTime.now(), false, null);
 
@@ -71,7 +71,7 @@ class FecharContaClienteServiceTest {
         Long clienteId = 2L;
         Long produtoId = 20L;
         Produto produto = Produto.criar("Heineken", new BigDecimal("8.00")); // não será usado para sócio
-        Cliente cliente = Cliente.reconstruir(clienteId, "Fábio", "fabio@email.com", PerfilCliente.SOCIO);
+        Cliente cliente = Cliente.reconstruir(clienteId, "Fábio", "fabio@email.com", "11912345678", PerfilCliente.SOCIO);
         DadosProduto dados = new DadosProduto(produtoId, 3, new BigDecimal("2.50")); // custo
         Consumo consumo = Consumo.reconstruir(2L, clienteId, dados, LocalDateTime.now(), false, null);
 

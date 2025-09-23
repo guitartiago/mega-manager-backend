@@ -53,6 +53,7 @@ class ClienteControllerTest {
         ClienteRequestDTO request = new ClienteRequestDTO();
         request.setNome("Tiago");
         request.setEmail("tiago@megafuzz.com");
+        request.setCelular("11992376458");
         request.setPerfil(PerfilCliente.SOCIO);
 
         Mockito.when(cadastrarClienteUseCase.cadastrar(Mockito.any())).thenAnswer(i -> i.getArgument(0));
@@ -79,7 +80,7 @@ class ClienteControllerTest {
         		1L,
         		"Tiago", 
         		"tiago@megamanager.com", 
-        		PerfilCliente.SOCIO
+        		"11992376458", PerfilCliente.SOCIO
         	);
 
         Mockito.when(buscarClienteUseCase.buscarPorId(1L)).thenReturn(java.util.Optional.of(cliente));
@@ -104,7 +105,7 @@ class ClienteControllerTest {
         		1L, 
         		"Tiago Atualizado", 
         		"tiago.alterado@megafuzz.com",
-        		PerfilCliente.SOCIO);
+        		"11992376458", PerfilCliente.SOCIO);
         
         Mockito.when(atualizarClienteUseCase.atualizar(Mockito.eq(1L), Mockito.any()))
                 .thenReturn(java.util.Optional.of(clienteAtualizado));
@@ -112,6 +113,7 @@ class ClienteControllerTest {
         ClienteRequestDTO dto = new ClienteRequestDTO();
         dto.setNome("Tiago Atualizado");
         dto.setEmail("tiago@megafuzz.com");
+        dto.setCelular("11992376458");
         dto.setPerfil(PerfilCliente.SOCIO);
 
         mockMvc.perform(put("/clientes/1")

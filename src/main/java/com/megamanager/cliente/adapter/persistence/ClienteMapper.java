@@ -14,6 +14,7 @@ public class ClienteMapper {
         entity.setId(cliente.getId());
         entity.setNome(cliente.getNome());
         entity.setEmail(cliente.getEmail());
+        entity.setCelular(cliente.getCelular());
         entity.setPerfil(cliente.getPerfil());
         return entity;
     }
@@ -24,6 +25,6 @@ public class ClienteMapper {
         return Cliente.reconstruir(entity.getId()
         		, entity.getNome()
         		, entity.getEmail()
-        		, entity.getPerfil());
+        		, entity.getCelular(), entity.getPerfil());
     }
 }
