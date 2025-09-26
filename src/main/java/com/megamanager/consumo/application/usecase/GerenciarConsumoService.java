@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.megamanager.cliente.application.port.out.ClienteRepository;
 import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
+import com.megamanager.consumo.application.port.in.ListarConsumosNaoPagoPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
 import com.megamanager.consumo.application.port.out.ConsumoRepository;
@@ -116,4 +117,5 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
         log.info("📋 Listando consumos do cliente {}", clienteId);
         return consumoRepository.buscarPorCliente(clienteId);
     }
+    
 }

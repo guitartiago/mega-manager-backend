@@ -1,5 +1,18 @@
 package com.megamanager.consumo.application.usecase;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import com.megamanager.cliente.application.port.out.ClienteRepository;
 import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
@@ -9,17 +22,6 @@ import com.megamanager.consumo.domain.Consumo;
 import com.megamanager.consumo.domain.DadosProduto;
 import com.megamanager.produto.application.port.out.ProdutoRepository;
 import com.megamanager.produto.domain.Produto;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 class FecharContaClienteServiceTest {
 
@@ -27,14 +29,14 @@ class FecharContaClienteServiceTest {
     private ProdutoRepository produtoRepository;
     private ConsumoRepository consumoRepository;
 
-    private FecharContaClienteService service;
+    private DetalharContaClienteService service;
 
     @BeforeEach
     void setUp() {
         clienteRepository = mock(ClienteRepository.class);
         produtoRepository = mock(ProdutoRepository.class);
         consumoRepository = mock(ConsumoRepository.class);
-        service = new FecharContaClienteService(clienteRepository, produtoRepository, consumoRepository);
+        service = new DetalharContaClienteService(clienteRepository, produtoRepository, consumoRepository);
     }
 
     @Test
@@ -53,7 +55,7 @@ class FecharContaClienteServiceTest {
         when(consumoRepository.buscarNaoPagosPorCliente(clienteId)).thenReturn(List.of(consumo));
 
         // Act
-        ExtratoContaCliente extrato = service.fecharConta(clienteId);
+        ExtratoContaCliente extrato = service.detalharConta(clienteId);
 
         // Assert
         assertThat(extrato).isNotNull();
@@ -79,7 +81,7 @@ class FecharContaClienteServiceTest {
         when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
         when(consumoRepository.buscarNaoPagosPorCliente(clienteId)).thenReturn(List.of(consumo));
 
-        ExtratoContaCliente extrato = service.fecharConta(clienteId);
+        ExtratoContaCliente extrato = service.detalharConta(clienteId);
 
         assertThat(extrato.getPerfil()).isEqualTo(PerfilCliente.SOCIO);
         assertThat(extrato.getItens()).hasSize(1);

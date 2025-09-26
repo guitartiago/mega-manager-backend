@@ -4,12 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.megamanager.cliente.application.port.out.ClienteRepository;
-import com.megamanager.consumo.application.port.in.FecharContaClienteUseCase;
+import com.megamanager.consumo.application.port.in.DetalharContaClienteUseCase;
 import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.PagarContaClienteUseCase;
 import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
 import com.megamanager.consumo.application.port.out.ConsumoRepository;
-import com.megamanager.consumo.application.usecase.FecharContaClienteService;
+import com.megamanager.consumo.application.usecase.DetalharContaClienteService;
 import com.megamanager.consumo.application.usecase.GerenciarConsumoService;
 import com.megamanager.consumo.application.usecase.PagarContaClienteService;
 import com.megamanager.estoque.application.port.out.EntradaEstoqueRepository;
@@ -37,9 +37,9 @@ public class ConsumoUseCaseConfig {
 	}
 
 	@Bean
-	public FecharContaClienteUseCase fecharContaClienteUseCase(ClienteRepository clienteRepository,
+	public DetalharContaClienteUseCase fecharContaClienteUseCase(ClienteRepository clienteRepository,
 			ProdutoRepository produtoRepository, ConsumoRepository consumoRepository) {
-		return new FecharContaClienteService(clienteRepository, produtoRepository, consumoRepository);
+		return new DetalharContaClienteService(clienteRepository, produtoRepository, consumoRepository);
 	}
 
 	@Bean

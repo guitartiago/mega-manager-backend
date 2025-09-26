@@ -19,16 +19,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.megamanager.cliente.domain.PerfilCliente;
 import com.megamanager.consumo.application.dto.ExtratoContaCliente;
 import com.megamanager.consumo.application.dto.ItemExtratoDTO;
-import com.megamanager.consumo.application.port.in.FecharContaClienteUseCase;
+import com.megamanager.consumo.application.port.in.DetalharContaClienteUseCase;
 
-@WebMvcTest(FecharContaController.class)
+@WebMvcTest(ConsumoController.class)
 class FecharContaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private FecharContaClienteUseCase fecharContaClienteUseCase;
+    private DetalharContaClienteUseCase fecharContaClienteUseCase;
 
 
     @Test
@@ -49,7 +49,7 @@ class FecharContaControllerTest {
                         .build()))
                 .build();
 
-        Mockito.when(fecharContaClienteUseCase.fecharConta(clienteId)).thenReturn(extrato);
+        Mockito.when(fecharContaClienteUseCase.detalharConta(clienteId)).thenReturn(extrato);
 
         // Act & Assert
         mockMvc.perform(get("/consumos/fechar-conta/{clienteId}", clienteId)

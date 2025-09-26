@@ -20,7 +20,7 @@ public class DadosProduto {
             throw new IllegalArgumentException("quantidade deve ser maior que zero");
         }
         if (valorUnitario == null || valorUnitario.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("valorUnitario deve ser maior que zero");
+        	valorUnitario = new BigDecimal("0.0");
         }
         this.produtoId = produtoId;
         this.quantidade = quantidade;
