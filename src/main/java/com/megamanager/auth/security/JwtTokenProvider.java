@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import com.megamanager.auth.application.port.out.TokenProvider;
+import com.megamanager.usuario.domain.PerfilUsuario;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +24,7 @@ public class JwtTokenProvider implements TokenProvider {
   }
 
   @Override
-  public String gerar(String subject, Set<String> roles) {
+  public String gerar(String subject, Set<PerfilUsuario> roles) {
     Instant now = Instant.now();
     Instant exp = now.plusSeconds(expirationMinutes * 60L);
 

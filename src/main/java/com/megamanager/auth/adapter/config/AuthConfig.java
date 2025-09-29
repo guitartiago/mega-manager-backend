@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 import com.megamanager.auth.application.port.in.AutenticarUseCase;
 import com.megamanager.auth.application.port.out.TokenProvider;
-import com.megamanager.auth.application.port.out.UsuarioRepository;
 import com.megamanager.auth.application.usecase.AutenticarService;
 import com.megamanager.auth.security.JwtTokenProvider;
+import com.megamanager.usuario.application.port.out.UsuarioRepository;
 
 @Configuration
 public class AuthConfig {

@@ -1,10 +1,11 @@
 package com.megamanager.auth.application.usecase;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.megamanager.auth.application.port.in.AutenticarUseCase;
 import com.megamanager.auth.application.port.out.TokenProvider;
-import com.megamanager.auth.application.port.out.UsuarioRepository;
-import com.megamanager.auth.domain.Usuario;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.megamanager.usuario.application.port.out.UsuarioRepository;
+import com.megamanager.usuario.domain.Usuario;
 
 public class AutenticarService implements AutenticarUseCase {
   private final UsuarioRepository repo;
@@ -18,7 +19,7 @@ public class AutenticarService implements AutenticarUseCase {
 
   @Override
   public TokenDTO autenticar(String username, String senha) {
-    Usuario u = repo.findByUsername(username)
+    Usuario u = repo.buscarPorUsername(username)
         .orElseThrow(() -> new IllegalArgumentException("Usuário/senha inválidos"));
     if (!u.isAtivo() || !encoder.matches(senha, u.getSenhaHash())) {
       throw new IllegalArgumentException("Usuário/senha inválidos");
