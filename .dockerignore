@@ -1,0 +1,26 @@
+# Ignorar diretórios de build
+target/
+out/
+build/
+
+# Ignorar configs locais
+.idea/
+.vscode/
+*.iml
+
+# Ignorar arquivos de controle de versão
+.git
+.gitignore
+.gitattributes
+
+# Logs
+*.log
+
+# Arquivos temporários do sistema
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Node (caso tenha coisas do frontend por engano)
+node_modules/
