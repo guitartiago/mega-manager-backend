@@ -86,7 +86,8 @@ public class SecurityConfig {
 
     // Use AllowedOriginPatterns quando allowCredentials = true
     config.setAllowedOriginPatterns(List.of(
-      "http://localhost:4200"
+    	"http://192.168.15.9:4200",
+    	"http://localhost:4200"
       //,"https://seu-dominio-frontend.com"  // coloque aqui quando publicar
     ));
     config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
