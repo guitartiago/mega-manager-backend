@@ -1,0 +1,84 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pagamento MegaFuzz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- CSS inline para compatibilidade com clientes de e-mail -->
+  <style>
+    body { margin:0; padding:0; background:#f4f4f4; }
+    .wrapper { width:100%; background:#f4f4f4; padding:24px 0; }
+    .container { max-width:620px; margin:0 auto; background:#ffffff; border:1px solid #e8e8e8; border-radius:8px; overflow:hidden; }
+    .header { background:#111; color:#fff; padding:20px 24px; font-family:Arial, Helvetica, sans-serif; }
+    .brand { font-size:20px; font-weight:bold; letter-spacing:0.5px; }
+    .content { padding:24px; font-family:Arial, Helvetica, sans-serif; color:#222; }
+    h1, h2, h3 { margin:0 0 12px 0; }
+    .muted { color:#666; }
+    .box { background:#fafafa; border:1px solid #eee; border-radius:6px; padding:12px; }
+    .code { font-family: Consolas, Menlo, monospace; font-size:14px; white-space:pre-wrap; word-break:break-word; }
+    .row { margin:12px 0; }
+    .label { font-size:12px; color:#666; text-transform:uppercase; letter-spacing:0.5px; }
+    .value { font-size:16px; font-weight:bold; margin-top:2px; }
+    .qr { text-align:center; margin:18px 0; }
+    .cta-wrap { text-align:center; margin:24px 0 8px; }
+    .cta { display:inline-block; background:#111; color:#fff !important; text-decoration:none; padding:12px 18px; border-radius:6px; font-weight:bold; }
+    .footer { padding:16px 24px; font-size:12px; color:#888; font-family:Arial, Helvetica, sans-serif; text-align:center; }
+    img { border:0; outline:none; text-decoration:none; max-width:100%; height:auto; }
+    @media (max-width: 600px) { .content { padding:18px; } .header { padding:16px 18px; } }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <div class="header">
+        <div class="brand">MegaFuzz • Conta para Pagamento</div>
+      </div>
+
+      <div class="content">
+        <h2 th:text="'Olá, ' + ${clienteNome} + '!'">Olá, Cliente!</h2>
+        <p class="muted" th:text="${saudacaoOpcional}">Segue abaixo o Pix para pagamento da sua conta.</p>
+
+        <div class="row">
+          <div class="label">Valor</div>
+          <div class="value" th:text="${valorBRL}">R$ 0,00</div>
+        </div>
+
+        <div class="row" th:if="${descricao != null and !#strings.isEmpty(descricao)}">
+          <div class="label">Descrição</div>
+          <div class="value" th:text="${descricao}">Consumo de bar e ensaio</div>
+        </div>
+
+        <div class="row">
+          <div class="label">TXID</div>
+          <div class="value" th:text="${txid}">MEGA123ABC...</div>
+        </div>
+
+        <h3 style="margin-top:20px;">Pix (copia e cola)</h3>
+        <div class="box code" th:text="${copiaCola}">
+          0002012636...6304ABCD
+        </div>
+
+        <h3 style="margin-top:22px;">QR Code</h3>
+        <p class="muted">Escaneie no app do seu banco:</p>
+        <!-- A imagem inline usa Content-ID 'qrcode' definida no e-mail -->
+        <div class="qr">
+          <img src="cid:qrcode" alt="QR Code Pix" width="240" height="240" />
+        </div>
+
+        <div class="cta-wrap" th:if="${ctaUrl != null and !#strings.isEmpty(ctaUrl)}">
+          <a class="cta" th:href="${ctaUrl}" target="_blank" rel="noopener">Abrir comprovante / detalhes</a>
+        </div>
+
+        <p class="muted" style="margin-top:24px;">
+          Dúvidas? Responda este e-mail e nossa equipe ajuda você. Obrigado!
+        </p>
+      </div>
+
+      <div class="footer">
+        MegaFuzz Studio • São Paulo/SP<br/>
+        Este é um e-mail automático. Não responda se não for necessário.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
