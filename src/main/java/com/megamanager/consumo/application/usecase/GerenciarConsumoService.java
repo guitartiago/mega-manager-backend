@@ -1,16 +1,8 @@
 package com.megamanager.consumo.application.usecase;
 
-import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.megamanager.cliente.application.port.out.ClienteRepository;
 import com.megamanager.cliente.domain.Cliente;
 import com.megamanager.cliente.domain.PerfilCliente;
-import com.megamanager.consumo.application.port.in.ListarConsumosNaoPagoPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
 import com.megamanager.consumo.application.port.out.ConsumoRepository;
@@ -20,8 +12,14 @@ import com.megamanager.estoque.application.port.out.EntradaEstoqueRepository;
 import com.megamanager.estoque.domain.EntradaEstoque;
 import com.megamanager.produto.application.port.out.ProdutoRepository;
 import com.megamanager.produto.domain.Produto;
-
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarConsumosPorClienteUseCase {
@@ -34,9 +32,12 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
     private final EntradaEstoqueRepository entradaEstoqueRepository;
 
     @Override
+    @Transactional
     public Consumo registrar(Consumo consumo) {
         log.info("➡️ Iniciando registro de consumo para cliente {} - produto {} - quantidade {}",
-                consumo.getClienteId(), consumo.getDadosProduto().getProdutoId(), consumo.getDadosProduto().getQuantidade());
+                consumo.getClienteId()
+                , consumo.getDadosProduto().getProdutoId()
+                , consumo.getDadosProduto().getQuantidade());
 
         Cliente cliente = clienteRepository.buscarPorId(consumo.getClienteId())
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
@@ -46,7 +47,9 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
 
         boolean isSocio = cliente.getPerfil() == PerfilCliente.SOCIO;
 
-        List<EntradaEstoque> entradasEstoque = entradaEstoqueRepository.buscarPorProdutoId(consumo.getDadosProduto().getProdutoId()).stream()
+        List<EntradaEstoque> entradasEstoque = entradaEstoqueRepository
+                .buscarPorProdutoId(consumo.getDadosProduto().getProdutoId())
+                .stream()
                 .filter(EntradaEstoque::possuiSaldoDisponivel)
                 .sorted(Comparator.comparing(EntradaEstoque::getDataCompra))
                 .toList();
@@ -54,19 +57,23 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
         int restante = consumo.getDadosProduto().getQuantidade();
         Consumo ultimoConsumo = null;
 
-        for (EntradaEstoque entrada : entradasEstoque) {
+        BigDecimal valorProdutoParaSocio = BigDecimal.ZERO;
+
+        for (EntradaEstoque entradaEstoque : entradasEstoque) {
             if (restante <= 0) break;
 
-            int podeAbater = Math.min(restante, entrada.getSaldo());
+            int podeAbater = Math.min(restante, entradaEstoque.getSaldo());
 
             log.debug("Abatendo {} unidade(s) da entrada #{} (saldo atual: {})",
-                    podeAbater, entrada.getId(), entrada.getSaldo());
+                    podeAbater, entradaEstoque.getId(), entradaEstoque.getSaldo());
 
-            entrada.abaterSaldo(podeAbater);
-            entradaEstoqueRepository.salvar(entrada);
+            entradaEstoque.abaterSaldo(podeAbater);
+            entradaEstoqueRepository.salvar(entradaEstoque);
+
+            valorProdutoParaSocio = entradaEstoque.getPrecoCustoUnitario();
 
             BigDecimal valorUnitario = isSocio
-                    ? entrada.getPrecoCustoUnitario()
+                    ? valorProdutoParaSocio
                     : produto.getPrecoVenda();
 
             Consumo parcial = Consumo.criar(
@@ -77,19 +84,23 @@ public class GerenciarConsumoService implements RegistrarConsumoUseCase, ListarC
                     		valorUnitario
                     	),
                     consumo.getDataHora(),
-                    entrada.getId()
+                    entradaEstoque.getId()
             );
 
             consumoRepository.salvar(parcial);
             restante -= podeAbater;
             ultimoConsumo = parcial;
+
         }
 
         if (restante > 0) {
-            log.warn("⚠️ Estoque insuficiente para produto {}! Registrando {} unidade(s) SEM abate de entrada.",
-                    produto.getId(), restante);
 
-            BigDecimal valorUnitario = produto.getPrecoVenda();
+            BigDecimal valorUnitario = isSocio
+                    ? valorProdutoParaSocio
+                    : produto.getPrecoVenda();
+
+            log.warn("⚠️ Estoque insuficiente para produto {}! Registrando {} unidade(s) SEM abate de entrada com o valor {}.",
+                    produto.getId(), restante, valorUnitario);
 
             Consumo fallback = Consumo.criar(
                     consumo.getClienteId(),

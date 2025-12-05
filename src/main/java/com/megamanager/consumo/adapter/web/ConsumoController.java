@@ -34,18 +34,33 @@ public class ConsumoController {
     private final ListarConsumosPorClienteUseCase listarConsumosPorClienteUseCase;
     private final DetalharContaClienteUseCase detalharContaClienteUseCase;
 
-    
+
     @Operation(
-        summary = "Registra o consumo de um produto por um cliente"
+            summary = "Registrar o consumo de um produto por um cliente"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Consumo registrado com sucesso"),
+            @ApiResponse(responseCode = "200", description = "Consumo registrado com sucesso"),
     })
     @PostMapping
     public ResponseEntity<ConsumoResponseDTO> registrarConsumo(@RequestBody @Valid ConsumoRequestDTO requestDTO) {
         var dominio = ConsumoDtoMapper.toDomain(requestDTO, null, null);
         var consumoRegistrado = registrarConsumoUseCase.registrar(dominio);
         return ResponseEntity.ok(ConsumoDtoMapper.toResponse(consumoRegistrado));
+    }
+
+    @Operation(
+            summary = "Registrar o consumo de um produto por um cliente"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consumos registrados com sucesso"),
+    })
+    @PostMapping("lote")
+    public ResponseEntity<List<ConsumoResponseDTO>> registrarConsumoEmLote(@RequestBody @Valid List<ConsumoRequestDTO> requestDTO) {
+        List<ConsumoResponseDTO> retorno = requestDTO.stream()
+                .map(ConsumoDtoMapper::toDomain)
+                .map(registrarConsumoUseCase::registrar)
+                .map(ConsumoDtoMapper::toResponse).toList();
+        return ResponseEntity.ok(retorno);
     }
     
     @Operation(

@@ -12,7 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ConsumoDtoMapper {
 
-    public static Consumo toDomain(ConsumoRequestDTO dto, 
+    public static Consumo toDomain(ConsumoRequestDTO dto) {
+        return toDomain(dto, null, null);
+    }
+
+    public static Consumo toDomain(ConsumoRequestDTO dto,
                                    java.math.BigDecimal valorUnitario,
                                    Long entradaEstoqueId) {
         return Consumo.criar(

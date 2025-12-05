@@ -117,6 +117,7 @@ class GerenciarConsumoServiceTest {
         Cliente socio = Cliente.reconstruir(clienteId, "Zé", "ze@email.com", "11912345678", PerfilCliente.SOCIO);
         Produto produto = Produto.reconstruir(produtoId, "Água", new BigDecimal("3.00"), true);
 
+
         when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(socio));
         when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
         when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of());
@@ -127,6 +128,54 @@ class GerenciarConsumoServiceTest {
         Consumo retorno = service.registrar(pedido);
 
         verify(consumoRepository).salvar(any());
+        assertNull(retorno.getEntradaEstoqueId());
+    }
+
+    @Test
+    @DisplayName("Deve registrar consumo mesmo sem estoque e gerar alerta")
+    void registrarConsumoComEstoqueParcialParaSocio() {
+        Long clienteId = 3L;
+        Long produtoId = 30L;
+
+        Cliente socio = Cliente.reconstruir(clienteId, "Zé", "ze@email.com", "11912345678", PerfilCliente.SOCIO);
+        Produto produto = Produto.reconstruir(produtoId, "Original", new BigDecimal("7.00"), true);
+
+        EntradaEstoque entrada1 = EntradaEstoque.reconstruir(100L, produtoId, 2, new BigDecimal("2.50"), LocalDateTime.now().minusDays(2), 2);
+        EntradaEstoque entrada2 = EntradaEstoque.reconstruir(101L, produtoId, 3, new BigDecimal("2.70"), LocalDateTime.now().minusDays(1), 3);
+
+        when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(socio));
+        when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
+        when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of(entrada1, entrada2));
+        when(consumoRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
+
+        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 10, new BigDecimal("3.00")), LocalDateTime.now(), null);
+
+        Consumo retorno = service.registrar(pedido);
+        verify(consumoRepository,times(3)).salvar(any());
+        assertNull(retorno.getEntradaEstoqueId());
+    }
+
+    @Test
+    @DisplayName("Deve registrar consumo mesmo sem estoque e gerar alerta")
+    void registrarConsumoComEstoqueParcialParaClienteComum() {
+        Long clienteId = 3L;
+        Long produtoId = 30L;
+
+        Cliente socio = Cliente.reconstruir(clienteId, "Zé", "ze@email.com", "11912345678", PerfilCliente.COMUM);
+        Produto produto = Produto.reconstruir(produtoId, "Original", new BigDecimal("7.00"), true);
+
+        EntradaEstoque entrada1 = EntradaEstoque.reconstruir(100L, produtoId, 2, new BigDecimal("2.50"), LocalDateTime.now().minusDays(2), 2);
+        EntradaEstoque entrada2 = EntradaEstoque.reconstruir(101L, produtoId, 3, new BigDecimal("2.70"), LocalDateTime.now().minusDays(1), 3);
+
+        when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(socio));
+        when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
+        when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of(entrada1, entrada2));
+        when(consumoRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
+
+        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 10, new BigDecimal("3.00")), LocalDateTime.now(), null);
+
+        Consumo retorno = service.registrar(pedido);
+        verify(consumoRepository,times(3)).salvar(any());
         assertNull(retorno.getEntradaEstoqueId());
     }
 }
