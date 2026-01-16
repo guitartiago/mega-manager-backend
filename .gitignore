@@ -10,10 +10,17 @@ target/
 .DS_Store
 Thumbs.db
 
+# H2
+.localdb/
+*.mv.db
+*.h2.db
+*.trace.db
+*.lock.db
+
 # Logs
 *.log
 
-# IDEs
+# IDEs Intellij
 .idea/
 *.iml
 
@@ -22,3 +29,4 @@ test-output/
 
 # Configuração temporária
 .env
+
