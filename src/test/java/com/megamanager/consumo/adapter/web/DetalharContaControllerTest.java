@@ -7,10 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.megamanager.auth.application.port.out.TokenProvider;
+import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCase;
+import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -22,19 +26,27 @@ import com.megamanager.consumo.application.dto.ItemExtratoDTO;
 import com.megamanager.consumo.application.port.in.DetalharContaClienteUseCase;
 
 @WebMvcTest(ConsumoController.class)
-class FecharContaControllerTest {
+@AutoConfigureMockMvc(addFilters = false)
+class DetalharContaControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private DetalharContaClienteUseCase fecharContaClienteUseCase;
+    private TokenProvider tokenProvider;
 
+    @MockBean
+    private DetalharContaClienteUseCase detalharContaClienteUseCase;
+
+    @MockBean
+    private RegistrarConsumoUseCase registrarConsumoUseCase;
+
+    @MockBean
+    private ListarConsumosPorClienteUseCase listarConsumosPorClienteUseCase;
 
     @Test
     @DisplayName("Deve retornar extrato da conta do cliente com status 200")
     void deveRetornarExtratoContaCliente() throws Exception {
-        // Arrange
         Long clienteId = 1L;
         ExtratoContaCliente extrato = ExtratoContaCliente.builder()
                 .clienteId(clienteId)
@@ -49,10 +61,9 @@ class FecharContaControllerTest {
                         .build()))
                 .build();
 
-        Mockito.when(fecharContaClienteUseCase.detalharConta(clienteId)).thenReturn(extrato);
+        Mockito.when(detalharContaClienteUseCase.detalharConta(clienteId)).thenReturn(extrato);
 
-        // Act & Assert
-        mockMvc.perform(get("/consumos/fechar-conta/{clienteId}", clienteId)
+        mockMvc.perform(get("/consumos/detalhar-conta/{clienteId}", clienteId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.clienteId").value(clienteId))

@@ -8,10 +8,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.megamanager.auth.application.port.out.TokenProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -21,65 +23,77 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.megamanager.produto.adapter.web.dto.ProdutoRequestDTO;
 import com.megamanager.produto.application.port.in.CadastrarProdutoUseCase;
 import com.megamanager.produto.application.port.in.ListarProdutosUseCase;
+import com.megamanager.produto.application.port.in.BuscarProdutoUseCase;
+import com.megamanager.produto.application.port.in.AtualizarProdutoUseCase;
 
-@WebMvcTest(ProdutoController.class)
+@WebMvcTest(controllers = ProdutoController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class ProdutoControllerTest {
-	
-	@Autowired
+
+    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
-    
-	@MockBean
+
+    @MockBean
+    private TokenProvider tokenProvider;
+
+    @MockBean
     private CadastrarProdutoUseCase cadastrarProdutoUseCase;
-	
-	@MockBean
-	private ListarProdutosUseCase listarProdutoUseCase;
-	
-	@Test
+
+    @MockBean
+    private ListarProdutosUseCase listarProdutoUseCase;
+
+    // Adicionados para que o controller seja criado corretamente pelo contexto de teste
+    @MockBean
+    private BuscarProdutoUseCase buscarProdutoUseCase;
+
+    @MockBean
+    private AtualizarProdutoUseCase atualizarProdutoUseCase;
+
+    // resto dos testes (mantidos iguais)
+    @Test
     @DisplayName("Deve cadastrar produto com sucesso (201)")
     void deveCadastrarProdutoComSucesso() throws Exception {
         ProdutoRequestDTO request = new ProdutoRequestDTO();
-        
         request.setNome("Cerveja Budweiser 269ml");
         request.setPrecoVenda(new BigDecimal("6.00"));
-        
+
         Mockito.when(cadastrarProdutoUseCase.cadastrar(Mockito.any())).thenAnswer(i -> i.getArgument(0));
 
         mockMvc.perform(post("/produtos")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
     }
-	
-	@Test
+
+    @Test
     @DisplayName("Deve cadastrar produto com sucesso (201)")
     void deveCadastrarListaDeProdutosComSucesso() throws Exception {
         List<ProdutoRequestDTO> request = mockCadastrarListaProdutosRequest();
-        
+
         Mockito.when(cadastrarProdutoUseCase.cadastrar(Mockito.any())).thenAnswer(i -> i.getArgument(0));
 
         mockMvc.perform(post("/produtos/lote")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated());
     }
-	
-	@Test
-	@DisplayName("Não deve cadastrar produto sem preço (400)")
-	void naoDeveCadastrarProdutoSemPreco() throws Exception {
-	    ProdutoRequestDTO request = new ProdutoRequestDTO();
-	    request.setNome("Cerveja sem preço");
-	    // precoVenda = null
 
-	    mockMvc.perform(post("/produtos")
-	            .contentType(MediaType.APPLICATION_JSON)
-	            .content(objectMapper.writeValueAsString(request)))
-	            .andExpect(status().isBadRequest());
-	}
-	
-	@Test
+    @Test
+    @DisplayName("Não deve cadastrar produto sem preço (400)")
+    void naoDeveCadastrarProdutoSemPreco() throws Exception {
+        ProdutoRequestDTO request = new ProdutoRequestDTO();
+        request.setNome("Cerveja sem preço");
+
+        mockMvc.perform(post("/produtos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("Deve retornar 200 e lista de clientes no GET /clientes")
     void deveListarTodosProdutos() throws Exception {
         Mockito.when(listarProdutoUseCase.listarTodos()).thenReturn(List.of());
@@ -87,20 +101,19 @@ class ProdutoControllerTest {
         mockMvc.perform(get("/produtos"))
                 .andExpect(status().isOk());
     }
-	
-	private List<ProdutoRequestDTO> mockCadastrarListaProdutosRequest() {
-		ProdutoRequestDTO produtoRequest1 = new ProdutoRequestDTO();
+
+    private List<ProdutoRequestDTO> mockCadastrarListaProdutosRequest() {
+        ProdutoRequestDTO produtoRequest1 = new ProdutoRequestDTO();
         ProdutoRequestDTO produtoRequest2 = new ProdutoRequestDTO();
-        
+
         produtoRequest1.setNome("Cerveja Budweiser 269ml");
         produtoRequest1.setPrecoVenda(new BigDecimal("6.00"));
         produtoRequest2.setNome("Cerveja Budweiser 269ml");
         produtoRequest2.setPrecoVenda(new BigDecimal("6.00"));
-        
-        List<ProdutoRequestDTO> request = new ArrayList<ProdutoRequestDTO>();
+
+        List<ProdutoRequestDTO> request = new ArrayList<>();
         request.add(produtoRequest1);
         request.add(produtoRequest2);
-		return request;
-	}
-
+        return request;
+    }
 }
