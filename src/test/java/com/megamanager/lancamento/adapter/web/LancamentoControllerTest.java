@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.megamanager.auth.application.port.out.TokenProvider;
 import com.megamanager.lancamento.adapter.web.dto.EstornarLancamentoRequestDTO;
 import com.megamanager.lancamento.adapter.web.dto.LancamentoRequestDTO;
 import com.megamanager.lancamento.application.port.in.EstornarLancamentoUseCase;
@@ -48,6 +49,9 @@ class LancamentoControllerTest {
     @MockBean
     EstornarLancamentoUseCase estornarLancamentoUseCase;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
     @Test
     void registrar_deveRetornar200EBody() throws Exception {
         LocalDateTime data = LocalDateTime.of(2026, 1, 1, 10, 0);
@@ -61,6 +65,8 @@ class LancamentoControllerTest {
                 new BigDecimal("300.00"),
                 "Pagamento parcial",
                 "sistema",
+                null,
+                null,
                 null
         );
 
@@ -93,9 +99,9 @@ class LancamentoControllerTest {
 
         List<Lancamento> lista = List.of(
                 Lancamento.reconstruir(1L, 10L, data, NaturezaLancamento.DEBITO, CategoriaLancamento.COBRANCA_ADICIONAL,
-                        new BigDecimal("100.00"), "Ensaio", "sistema", null),
+                        new BigDecimal("100.00"), "Ensaio", "sistema", null, null, null),
                 Lancamento.reconstruir(2L, 10L, data.plusDays(1), NaturezaLancamento.CREDITO, CategoriaLancamento.PAGAMENTO,
-                        new BigDecimal("50.00"), "Pix", "sistema", null)
+                        new BigDecimal("50.00"), "Pix", "sistema", null, null, null)
         );
 
         when(listarLancamentosPorClienteUseCase.listarPorCliente(10L)).thenReturn(lista);
@@ -119,7 +125,9 @@ class LancamentoControllerTest {
                 new BigDecimal("100.00"),
                 "Duplicado",
                 "sistema",
-                7L
+                7L,
+                null,
+                null
         );
 
         when(estornarLancamentoUseCase.executar(any(EstornarLancamentoUseCase.EstornarLancamentoCommand.class)))

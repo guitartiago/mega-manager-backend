@@ -22,6 +22,8 @@ public class LancamentoMapper {
         entity.setMotivo(dominio.getMotivo());
         entity.setResponsavelUsername(dominio.getResponsavelUsername());
         entity.setLancamentoOrigemId(dominio.getLancamentoOrigemId());
+        entity.setFechamentoId(dominio.getFechamentoId());
+        entity.setDataProcessamento(dominio.getDataProcessamento());
         return entity;
     }
 
@@ -38,7 +40,9 @@ public class LancamentoMapper {
                 entity.getValor(),
                 entity.getMotivo(),
                 entity.getResponsavelUsername(),
-                entity.getLancamentoOrigemId()
+                entity.getLancamentoOrigemId(),
+                entity.getFechamentoId(),
+                entity.getDataProcessamento()
         );
     }
 }

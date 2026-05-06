@@ -18,6 +18,9 @@ public class Lancamento {
     private String responsavelUsername;
     private Long lancamentoOrigemId; // null para lançamentos normais; preenchido para ESTORNO
 
+    private Long fechamentoId;
+    private LocalDateTime dataProcessamento;
+
     private Lancamento(Long id,
                        Long clienteId,
                        LocalDateTime dataHora,
@@ -26,7 +29,9 @@ public class Lancamento {
                        BigDecimal valor,
                        String motivo,
                        String responsavelUsername,
-                       Long lancamentoOrigemId) {
+                       Long lancamentoOrigemId,
+                       Long fechamentoId,              // NOVO
+                       LocalDateTime dataProcessamento) {
 
         if (clienteId == null) {
             throw new IllegalArgumentException("clienteId não pode ser null");
@@ -72,6 +77,8 @@ public class Lancamento {
         this.motivo = motivo;
         this.responsavelUsername = responsavelUsername;
         this.lancamentoOrigemId = lancamentoOrigemId;
+        this.fechamentoId = fechamentoId;              // NOVO
+        this.dataProcessamento = dataProcessamento;    // NOVO
     }
 
     public static Lancamento criar(Long clienteId,
@@ -90,6 +97,8 @@ public class Lancamento {
                 valor,
                 motivo,
                 responsavelUsername,
+                null,
+                null,
                 null
         );
     }
@@ -102,7 +111,9 @@ public class Lancamento {
                                          BigDecimal valor,
                                          String motivo,
                                          String responsavelUsername,
-                                         Long lancamentoOrigemId) {
+                                         Long lancamentoOrigemId,
+                                         Long fechamentoId,
+                                         LocalDateTime dataProcessamento) {
         return new Lancamento(
                 id,
                 clienteId,
@@ -112,7 +123,9 @@ public class Lancamento {
                 valor,
                 motivo,
                 responsavelUsername,
-                lancamentoOrigemId
+                lancamentoOrigemId,
+                fechamentoId,
+                dataProcessamento
         );
     }
 
@@ -130,7 +143,9 @@ public class Lancamento {
                 this.valor,
                 motivoEstorno,
                 responsavelUsernameEstorno,
-                this.id
+                this.id,
+                null,
+                null
         );
     }
 }

@@ -87,15 +87,19 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Use AllowedOriginPatterns quando allowCredentials = true
+        // Em produção, use variáveis de ambiente
         config.setAllowedOriginPatterns(List.of(
-                "http://192.168.15.9:4200",
-                "http://localhost:4200"
-                //,"https://seu-dominio-frontend.com" // coloque aqui quando publicar
+                "http://localhost:4200",
+                "http://localhost:3000",
+                "https://*.megamanager.com"
+                // Adicione domínios em produção via variáveis de ambiente
         ));
-        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","Origin"));
-        config.setExposedHeaders(List.of("Authorization")); // se precisar ler esse header no front
-        config.setAllowCredentials(true); // usa Authorization header no browser
+        
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"));
+        config.setExposedHeaders(List.of("Authorization", "X-Total-Count"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L); // Cache preflight por 1 hora
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

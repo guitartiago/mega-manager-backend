@@ -5,13 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -24,8 +22,6 @@ import com.megamanager.cliente.domain.PerfilCliente;
 import com.megamanager.consumo.application.port.out.ConsumoRepository;
 import com.megamanager.consumo.domain.Consumo;
 import com.megamanager.consumo.domain.DadosProduto;
-import com.megamanager.estoque.application.port.out.EntradaEstoqueRepository;
-import com.megamanager.estoque.domain.EntradaEstoque;
 import com.megamanager.produto.application.port.out.ProdutoRepository;
 import com.megamanager.produto.domain.Produto;
 
@@ -34,7 +30,7 @@ class GerenciarConsumoServiceTest {
     private ConsumoRepository consumoRepository;
     private ClienteRepository clienteRepository;
     private ProdutoRepository produtoRepository;
-    private EntradaEstoqueRepository entradaEstoqueRepository;
+    private AbaterEstoqueService abaterEstoqueService;
 
     private GerenciarConsumoService service;
 
@@ -43,13 +39,13 @@ class GerenciarConsumoServiceTest {
         consumoRepository = mock(ConsumoRepository.class);
         clienteRepository = mock(ClienteRepository.class);
         produtoRepository = mock(ProdutoRepository.class);
-        entradaEstoqueRepository = mock(EntradaEstoqueRepository.class);
+        abaterEstoqueService = mock(AbaterEstoqueService.class);
 
         service = new GerenciarConsumoService(
                 consumoRepository,
                 clienteRepository,
                 produtoRepository,
-                entradaEstoqueRepository
+                abaterEstoqueService
         );
     }
 
@@ -62,24 +58,20 @@ class GerenciarConsumoServiceTest {
         Cliente socio = Cliente.reconstruir(clienteId, "Tiago", "email@email.com", "11912345678", PerfilCliente.SOCIO);
         Produto produto = Produto.reconstruir(produtoId, "Cerveja", new BigDecimal("6.00"), true);
 
-        EntradaEstoque entrada1 = EntradaEstoque.reconstruir(100L, produtoId, 2, new BigDecimal("2.50"), LocalDateTime.now().minusDays(2), 2);
-        EntradaEstoque entrada2 = EntradaEstoque.reconstruir(101L, produtoId, 3, new BigDecimal("2.70"), LocalDateTime.now().minusDays(1), 3);
+        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 3, new BigDecimal("6.00")), LocalDateTime.now(), null);
+        
+        Consumo consumoEsperado = Consumo.criar(clienteId, new DadosProduto(produtoId, 1, new BigDecimal("6.00")), LocalDateTime.now(), 101L);
 
         when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(socio));
         when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
-        when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of(entrada1, entrada2));
-
-        Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 3, new BigDecimal("6.00")), LocalDateTime.now(), null);
-
-        when(consumoRepository.salvar(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(abaterEstoqueService.abaterESalvar(any(), any(), any())).thenReturn(consumoEsperado);
 
         Consumo retorno = service.registrar(pedido);
 
-        verify(entradaEstoqueRepository, times(2)).salvar(any());
-        verify(consumoRepository, times(2)).salvar(any());
+        verify(abaterEstoqueService).abaterESalvar(any(), any(), any());
 
         assertNotNull(retorno);
-        assertEquals(101L, retorno.getEntradaEstoqueId()); // deve ser o último lote usado
+        assertEquals(101L, retorno.getEntradaEstoqueId());
         assertEquals(1, retorno.getDadosProduto().getQuantidade());
     }
 
@@ -91,19 +83,18 @@ class GerenciarConsumoServiceTest {
 
         Cliente naoSocio = Cliente.reconstruir(clienteId, "Cliente", "nao@email.com", "11912345678", PerfilCliente.COMUM);
         Produto produto = Produto.reconstruir(produtoId, "Refri", new BigDecimal("5.00"), true);
-        EntradaEstoque entrada = EntradaEstoque.reconstruir(200L, produtoId, 2, new BigDecimal("2.00"), LocalDateTime.now().minusDays(1), 2);
+        
+        Consumo consumoEsperado = Consumo.criar(clienteId, new DadosProduto(produtoId, 1, new BigDecimal("5.00")), LocalDateTime.now(), 200L);
 
         when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(naoSocio));
         when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
-        when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of(entrada));
-        when(consumoRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
+        when(abaterEstoqueService.abaterESalvar(any(), any(), any())).thenReturn(consumoEsperado);
 
         Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 1, new BigDecimal("5.00")), LocalDateTime.now(), null);
 
         Consumo retorno = service.registrar(pedido);
 
-        verify(consumoRepository).salvar(any());
-        verify(entradaEstoqueRepository).salvar(any());
+        verify(abaterEstoqueService).abaterESalvar(any(), any(), any());
 
         assertEquals(new BigDecimal("5.00"), retorno.getDadosProduto().getValorUnitario());
     }
@@ -116,17 +107,18 @@ class GerenciarConsumoServiceTest {
 
         Cliente socio = Cliente.reconstruir(clienteId, "Zé", "ze@email.com", "11912345678", PerfilCliente.SOCIO);
         Produto produto = Produto.reconstruir(produtoId, "Água", new BigDecimal("3.00"), true);
+        
+        Consumo consumoEsperado = Consumo.criar(clienteId, new DadosProduto(produtoId, 2, new BigDecimal("3.00")), LocalDateTime.now(), null);
 
         when(clienteRepository.buscarPorId(clienteId)).thenReturn(Optional.of(socio));
         when(produtoRepository.buscarPorId(produtoId)).thenReturn(Optional.of(produto));
-        when(entradaEstoqueRepository.buscarPorProdutoId(produtoId)).thenReturn(List.of());
-        when(consumoRepository.salvar(any())).thenAnswer(i -> i.getArgument(0));
+        when(abaterEstoqueService.abaterESalvar(any(), any(), any())).thenReturn(consumoEsperado);
 
         Consumo pedido = Consumo.criar(clienteId, new DadosProduto(produtoId, 2, new BigDecimal("3.00")), LocalDateTime.now(), null);
 
         Consumo retorno = service.registrar(pedido);
 
-        verify(consumoRepository).salvar(any());
+        verify(abaterEstoqueService).abaterESalvar(any(), any(), any());
         assertNull(retorno.getEntradaEstoqueId());
     }
 }

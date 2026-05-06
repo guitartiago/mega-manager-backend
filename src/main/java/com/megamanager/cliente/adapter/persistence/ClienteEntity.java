@@ -1,6 +1,7 @@
 package com.megamanager.cliente.adapter.persistence;
 
 import com.megamanager.cliente.domain.PerfilCliente;
+import com.megamanager.common.entity.AuditableEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,33 +11,35 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "clientes")
 @Data
-public class ClienteEntity {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(callSuper = false)
+public class ClienteEntity extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotBlank
+    @Column(nullable = false, length = 100)
     private String nome;
     
-    @Email
+    @Column(nullable = false, unique = true)
     private String email;
     
-    @NotNull
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PerfilCliente perfil;
     
-    @Column(length = 20, nullable = false)
-    @NotBlank(message = "celular é obrigatório")
-    @Pattern(regexp = "^\\+?\\d{10,13}$", message = "celular inválido")
+    @Column(nullable = false, length = 20)
     private String celular;
 }

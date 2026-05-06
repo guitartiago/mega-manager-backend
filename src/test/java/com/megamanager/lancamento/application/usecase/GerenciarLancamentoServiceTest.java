@@ -51,7 +51,9 @@ class GerenciarLancamentoServiceTest {
                             l.getValor(),
                             l.getMotivo(),
                             l.getResponsavelUsername(),
-                            l.getLancamentoOrigemId()
+                            l.getLancamentoOrigemId(),
+                            l.getFechamentoId(),
+                            l.getDataProcessamento()
                     );
                 });
 
@@ -175,6 +177,8 @@ class GerenciarLancamentoServiceTest {
                 new BigDecimal("100.00"),
                 "Ensaio",
                 "tiago",
+                null,
+                null,
                 null
         );
 
@@ -206,6 +210,8 @@ class GerenciarLancamentoServiceTest {
                 new BigDecimal("100.00"),
                 "Ensaio",
                 "tiago",
+                null,
+                null,
                 null
         );
 

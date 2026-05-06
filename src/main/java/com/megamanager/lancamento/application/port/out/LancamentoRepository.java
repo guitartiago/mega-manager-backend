@@ -14,4 +14,8 @@ public interface LancamentoRepository {
     Optional<Lancamento> buscarPorId(Long id);
 
     boolean existeEstornoParaOrigem(Long lancamentoOrigemId);
+
+    List<Lancamento> buscarNaoProcessadosPorCliente(Long clienteId);
+
+    void marcarLancamentosComoProcessados(List<Long> lancamentoIds, Long fechamentoId);
 }

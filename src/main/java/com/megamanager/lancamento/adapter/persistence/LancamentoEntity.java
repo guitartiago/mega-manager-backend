@@ -4,11 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "lancamentos")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LancamentoEntity {
 
     @Id
@@ -38,4 +42,10 @@ public class LancamentoEntity {
 
     @Column(name = "lancamento_origem_id")
     private Long lancamentoOrigemId;
+
+    @Column(name = "fechamento_id")
+    private Long fechamentoId;  // null enquanto não foi processado
+
+    @Column(name = "data_processamento")
+    private LocalDateTime dataProcessamento;  // Quando foi incluído no fechamento
 }

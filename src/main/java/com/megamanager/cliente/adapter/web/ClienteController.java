@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.megamanager.cliente.adapter.web.dto.ClienteRequestDTO;
@@ -22,6 +23,8 @@ import com.megamanager.cliente.application.port.in.CadastrarClienteUseCase;
 import com.megamanager.cliente.application.port.in.ExcluirClienteUseCase;
 import com.megamanager.cliente.domain.Cliente;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +39,7 @@ public class ClienteController {
     private final ExcluirClienteUseCase excluirClienteUseCase;
 
     @PostMapping
+    @Operation(summary = "Criar novo cliente")
     public ResponseEntity<ClienteResponseDTO> cadastrar(@RequestBody @Valid ClienteRequestDTO dto) {
         Cliente cliente = ClienteDtoMapper.toDomain(dto);
         Cliente criado = cadastrarClienteUseCase.cadastrar(cliente);
@@ -44,14 +48,37 @@ public class ClienteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteResponseDTO>> listarTodos() {
+    @Operation(summary = "Listar clientes com paginação")
+    public ResponseEntity<PaginatedResponse<ClienteResponseDTO>> listarTodos(
+            @Parameter(description = "Página (começando em 0)", example = "0")
+            @RequestParam(defaultValue = "0") int page,
+            
+            @Parameter(description = "Tamanho da página", example = "20")
+            @RequestParam(defaultValue = "20") int size) {
+        
         List<Cliente> clientes = buscarClienteUseCase.listarTodos();
-        List<ClienteResponseDTO> response = clientes.stream()
-                .map(ClienteDtoMapper::toResponse).toList();
+        
+        // Implementar paginação simples
+        int start = page * size;
+        int end = Math.min(start + size, clientes.size());
+        
+        List<ClienteResponseDTO> content = clientes.subList(start, end)
+                .stream()
+                .map(ClienteDtoMapper::toResponse)
+                .toList();
+        
+        PaginatedResponse<ClienteResponseDTO> response = PaginatedResponse.<ClienteResponseDTO>builder()
+                .content(content)
+                .page(page)
+                .size(size)
+                .total(clientes.size())
+                .build();
+        
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar cliente por ID")
     public ResponseEntity<ClienteResponseDTO> buscarPorId(@PathVariable Long id) {
         return buscarClienteUseCase.buscarPorId(id)
                 .map(ClienteDtoMapper::toResponse)
@@ -60,6 +87,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar cliente")
     public ResponseEntity<ClienteResponseDTO> atualizar(@PathVariable Long id,
                                                         @RequestBody @Valid ClienteRequestDTO dto) {
         Cliente cliente = ClienteDtoMapper.toDomain(dto);
@@ -70,6 +98,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar cliente")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         excluirClienteUseCase.excluir(id);
         return ResponseEntity.noContent().build();

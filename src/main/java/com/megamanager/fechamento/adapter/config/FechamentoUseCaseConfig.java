@@ -1,5 +1,6 @@
 package com.megamanager.fechamento.adapter.config;
 
+import com.megamanager.lancamento.application.port.out.LancamentoRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,9 +18,10 @@ public class FechamentoUseCaseConfig {
             ClienteRepository clienteRepository,
             ProdutoRepository produtoRepository,
             ConsumoRepository consumoRepository,
-            FechamentoContaRepository fechamentoRepository) {
+            FechamentoContaRepository fechamentoRepository,
+            LancamentoRepository lancamentoRepository) {
         return new FechamentoContaService(
-                clienteRepository, produtoRepository, consumoRepository, fechamentoRepository
+                clienteRepository, produtoRepository, consumoRepository, fechamentoRepository, lancamentoRepository
         );
     }
 }
