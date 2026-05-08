@@ -9,6 +9,7 @@ import com.megamanager.cliente.application.port.in.CadastrarClienteUseCase;
 import com.megamanager.cliente.application.port.in.ExcluirClienteUseCase;
 import com.megamanager.cliente.application.port.out.ClienteRepository;
 import com.megamanager.cliente.domain.Cliente;
+import com.megamanager.common.exception.ClienteNaoEncontradoException;
 
 import lombok.RequiredArgsConstructor;
 

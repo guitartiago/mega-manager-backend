@@ -4,6 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.megamanager.auth.application.port.in.AutenticarUseCase;
 import com.megamanager.auth.application.port.out.TokenProvider;
+import com.megamanager.common.exception.UsuarioInativoException;
 import com.megamanager.usuario.application.port.out.UsuarioRepository;
 import com.megamanager.usuario.domain.Usuario;
 
@@ -20,10 +21,12 @@ public class AutenticarService implements AutenticarUseCase {
   @Override
   public TokenDTO autenticar(String username, String senha) {
     Usuario u = repo.buscarPorUsername(username)
-        .orElseThrow(() -> new IllegalArgumentException("Usuário/senha inválidos"));
+        .orElseThrow(() -> new UsuarioInativoException(username));
+    
     if (!u.isAtivo() || !encoder.matches(senha, u.getSenhaHash())) {
-      throw new IllegalArgumentException("Usuário/senha inválidos");
+      throw new UsuarioInativoException(username);
     }
+    
     String jwt = tokenProvider.gerar(u.getUsername(), u.getPerfis());
     long exp = tokenProvider.expiresAt(jwt);
     return new TokenDTO(jwt, exp);

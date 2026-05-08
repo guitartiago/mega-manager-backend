@@ -1,5 +1,6 @@
 package com.megamanager.consumo.adapter.config;
 
+import com.megamanager.consumo.application.usecase.AbaterEstoqueService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,33 +19,39 @@ import com.megamanager.produto.application.port.out.ProdutoRepository;
 @Configuration
 public class ConsumoUseCaseConfig {
 
-	@Bean
-	public GerenciarConsumoService gerenciarConsumoService(ConsumoRepository consumoRepository,
-			ClienteRepository clienteRepository, ProdutoRepository produtoRepository,
-			EntradaEstoqueRepository entradaEstoqueRepository) {
-		return new GerenciarConsumoService(consumoRepository, clienteRepository, produtoRepository,
-				entradaEstoqueRepository);
-	}
+    @Bean
+    public AbaterEstoqueService abaterEstoqueService(EntradaEstoqueRepository entradaEstoqueRepository,
+                                                     ConsumoRepository consumoRepository) {
+        return new AbaterEstoqueService(entradaEstoqueRepository, consumoRepository);
+    }
 
-	@Bean
-	public RegistrarConsumoUseCase registrarConsumoUseCase(GerenciarConsumoService service) {
-		return service;
-	}
+    @Bean
+    public GerenciarConsumoService gerenciarConsumoService(ConsumoRepository consumoRepository,
+                                                           ClienteRepository clienteRepository, ProdutoRepository produtoRepository,
+                                                           AbaterEstoqueService abaterEstoqueService) {
+        return new GerenciarConsumoService(consumoRepository, clienteRepository, produtoRepository,
+                abaterEstoqueService);
+    }
 
-	@Bean
-	public ListarConsumosPorClienteUseCase listarConsumosPorClienteUseCase(GerenciarConsumoService service) {
-		return service;
-	}
+    @Bean
+    public RegistrarConsumoUseCase registrarConsumoUseCase(GerenciarConsumoService service) {
+        return service;
+    }
 
-	@Bean
-	public DetalharContaClienteUseCase fecharContaClienteUseCase(ClienteRepository clienteRepository,
-			ProdutoRepository produtoRepository, ConsumoRepository consumoRepository) {
-		return new DetalharContaClienteService(clienteRepository, produtoRepository, consumoRepository);
-	}
+    @Bean
+    public ListarConsumosPorClienteUseCase listarConsumosPorClienteUseCase(GerenciarConsumoService service) {
+        return service;
+    }
 
-	@Bean
-	public PagarContaClienteUseCase pagarContaClienteUseCase(ConsumoRepository consumoRepository,
-			ClienteRepository clienteRepository) {
-		return new PagarContaClienteService(consumoRepository, clienteRepository);
-	}
+    @Bean
+    public DetalharContaClienteUseCase fecharContaClienteUseCase(ClienteRepository clienteRepository,
+                                                                 ProdutoRepository produtoRepository, ConsumoRepository consumoRepository) {
+        return new DetalharContaClienteService(clienteRepository, produtoRepository, consumoRepository);
+    }
+
+    @Bean
+    public PagarContaClienteUseCase pagarContaClienteUseCase(ConsumoRepository consumoRepository,
+                                                             ClienteRepository clienteRepository) {
+        return new PagarContaClienteService(consumoRepository, clienteRepository);
+    }
 }
