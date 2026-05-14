@@ -39,6 +39,10 @@ public class FechamentoDtoMapper {
                         .quantidade(i.getQuantidade())
                         .valorUnitario(i.getValorUnitario())
                         .valorTotal(i.getValorTotal())
+                        .tipoItem(i.getTipoItem())
+                        .lancamentoId(i.getLancamentoId())
+                        .descricao(i.getDescricao())
+                        .natureza(i.getNatureza())
                         .build()
         ).toList();
     }

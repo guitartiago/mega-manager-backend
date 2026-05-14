@@ -17,4 +17,6 @@ public class LancamentoResponseDTO {
     private String motivo;
     private String responsavelUsername;
     private Long lancamentoOrigemId;
+    private Long fechamentoId;
+    private LocalDateTime dataProcessamento;
 }

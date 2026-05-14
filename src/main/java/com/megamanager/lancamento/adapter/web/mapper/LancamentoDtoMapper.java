@@ -37,6 +37,8 @@ public class LancamentoDtoMapper {
         dto.setMotivo(dominio.getMotivo());
         dto.setResponsavelUsername(dominio.getResponsavelUsername());
         dto.setLancamentoOrigemId(dominio.getLancamentoOrigemId());
+        dto.setFechamentoId(dominio.getFechamentoId());
+        dto.setDataProcessamento(dominio.getDataProcessamento());
         return dto;
     }
 }

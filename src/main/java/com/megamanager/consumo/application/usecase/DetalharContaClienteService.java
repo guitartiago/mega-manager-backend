@@ -35,6 +35,7 @@ public class DetalharContaClienteService implements DetalharContaClienteUseCase 
 
         List<Consumo> consumos = consumoRepository.buscarNaoPagosPorCliente(clienteId);
 
+
         List<ItemExtratoDTO> itens = consumos.stream().map(consumo -> {
             Produto produto = produtoRepository.buscarPorId(consumo.getDadosProduto().getProdutoId())
                     .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));

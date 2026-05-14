@@ -25,6 +25,10 @@ public class FechamentoMapper {
             ie.setQuantidade(item.getQuantidade());
             ie.setValorUnitario(item.getValorUnitario());
             ie.setValorTotal(item.getValorTotal());
+            ie.setTipoItem(item.getTipoItem());
+            ie.setDescricao(item.getDescricao());
+            ie.setLancamentoId(item.getLancamentoId());
+            ie.setNatureza(item.getNatureza());
             ie.setFechamento(e);
             return ie;
         }).toList();
@@ -52,6 +56,10 @@ public class FechamentoMapper {
                 .quantidade(ie.getQuantidade())
                 .valorUnitario(ie.getValorUnitario())
                 .valorTotal(ie.getValorTotal())
+                .tipoItem(ie.getTipoItem())
+                .descricao(ie.getDescricao())
+                .lancamentoId(ie.getLancamentoId())
+                .natureza(ie.getNatureza())
                 .build();
     }
 }
