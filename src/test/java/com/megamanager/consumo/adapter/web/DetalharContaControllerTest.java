@@ -10,6 +10,7 @@ import java.util.List;
 import com.megamanager.auth.application.port.out.TokenProvider;
 import com.megamanager.consumo.application.port.in.ListarConsumosPorClienteUseCase;
 import com.megamanager.consumo.application.port.in.RegistrarConsumoUseCase;
+import com.megamanager.consumo.application.port.in.DetalharContaClienteV2UseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -37,6 +38,9 @@ class DetalharContaControllerTest {
 
     @MockBean
     private DetalharContaClienteUseCase detalharContaClienteUseCase;
+
+    @MockBean
+    private DetalharContaClienteV2UseCase detalharContaClienteV2UseCase;
 
     @MockBean
     private RegistrarConsumoUseCase registrarConsumoUseCase;
