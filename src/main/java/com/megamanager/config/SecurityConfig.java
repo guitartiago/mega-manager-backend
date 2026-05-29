@@ -91,7 +91,9 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:4200",
                 "http://localhost:3000",
-                "https://*.megamanager.com"
+                "https://*.megamanager.com",
+                "http://192.168.15.10",
+                "http://192.168.15.10:4200"
                 // Adicione domínios em produção via variáveis de ambiente
         ));
         
